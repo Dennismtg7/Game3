@@ -244,6 +244,9 @@ body {
   display: flex; align-items: center; justify-content: center;
   z-index: 50; padding: 16px;
 }
+.modal-overlay[hidden] {
+  display: none !important;
+}
 .modal {
   background: #fbfaf7; border-radius: 8px; width: 100%; max-width: 380px;
   max-height: 70vh; overflow: hidden; display: flex; flex-direction: column;
