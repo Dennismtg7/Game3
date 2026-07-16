@@ -18,7 +18,7 @@ export const firebaseConfig = {
   storageBucket: "mtg7-caeea.firebasestorage.app",
   messagingSenderId: "714152940805",
   appId: "1:714152940805:web:ec96a3e6967a2b881ed36c",
-  measurementId: "G-ZC6T2LDQPX"
+//  measurementId: "G-ZC6T2LDQPX"
 };
 
 // Initialize Firebase
