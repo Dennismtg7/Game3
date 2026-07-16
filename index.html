@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover" />
+<title>Field Level Book</title>
+<meta name="description" content="Offline rise-and-fall levelling field book for surveyors." />
+
+<!-- PWA -->
+<link rel="manifest" href="manifest.json" />
+<meta name="theme-color" content="#1e2a3a" />
+<link rel="icon" href="icons/icon-192.png" />
+<link rel="apple-touch-icon" href="icons/icon-192.png" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="Field Book" />
+
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<div id="offline-banner" class="offline-banner" hidden>You're offline — working from local storage.</div>
+
+<div class="page">
+  <div class="sheet">
+
+    <!-- letterhead -->
+    <div class="letterhead">
+      <div class="brand-row">
+        <div class="brand-mark" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v3"/><path d="M3 16v3a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-3"/><path d="M8 8v2"/><path d="M12 8v3"/><path d="M16 8v2"/><path d="M3 8h18"/><path d="M3 16h18"/></svg>
+        </div>
+        <div>
+          <div class="brand-title">FIELD LEVEL BOOK</div>
+          <div class="brand-sub">Rise &amp; Fall Method — Booking Sheet</div>
+        </div>
+      </div>
+
+      <div class="toolbar">
+        <span id="save-msg" class="save-msg"></span>
+        <span id="active-project" class="active-project"></span>
+        <button id="btn-save" class="btn btn-primary" title="Save this field book as a named project">Save As</button>
+        <button id="btn-open" class="btn btn-ghost" title="Open a saved project">Open</button>
+        <button id="btn-new" class="btn btn-ghost" title="Start a new blank sheet">New</button>
+        <span id="user-email" class="active-project"></span>
+        <button id="btn-signout" class="btn btn-ghost" title="Sign out" hidden>Sign out</button>
+      </div>
+    </div>
+
+    <!-- meta fields -->
+    <div class="meta-grid" id="meta-grid">
+      <label class="meta-field">
+        <span class="meta-label">Date</span>
+        <input class="meta-input" type="date" data-field="date" />
+      </label>
+      <label class="meta-field">
+        <span class="meta-label">Level Type</span>
+        <input class="meta-input" type="text" data-field="levelType" placeholder="e.g. Auto Level" />
+      </label>
+      <label class="meta-field">
+        <span class="meta-label">Surveyor</span>
+        <input class="meta-input" type="text" data-field="surveyor" placeholder="Name" />
+      </label>
+      <label class="meta-field">
+        <span class="meta-label">Booker</span>
+        <input class="meta-input" type="text" data-field="booker" placeholder="Name" />
+      </label>
+      <label class="meta-field">
+        <span class="meta-label">From Point</span>
+        <input class="meta-input" type="text" data-field="fromPoint" placeholder="BM / TBM" />
+      </label>
+      <label class="meta-field">
+        <span class="meta-label">To Point</span>
+        <input class="meta-input" type="text" data-field="toPoint" placeholder="BM / TBM" />
+      </label>
+      <label class="meta-field">
+        <span class="meta-label">Starting RL</span>
+        <input class="meta-input mono" type="text" inputmode="decimal" data-field="startRL" placeholder="100.000" />
+      </label>
+    </div>
+
+    <!-- table -->
+    <div class="table-wrap">
+      <table class="fb-table">
+        <thead>
+          <tr>
+            <th class="th th-group" colspan="3">Staff Readings</th>
+            <th class="th th-group" colspan="3">Elevation</th>
+            <th class="th" rowspan="2">Distance</th>
+            <th class="th" rowspan="2">Remarks</th>
+            <th class="th th-noprint" rowspan="2"></th>
+          </tr>
+          <tr>
+            <th class="th-sub">Back Sight</th>
+            <th class="th-sub">Inter. Sight</th>
+            <th class="th-sub">Fore Sight</th>
+            <th class="th-sub">Rise</th>
+            <th class="th-sub">Fall</th>
+            <th class="th-sub">Reduced Level</th>
+          </tr>
+        </thead>
+        <tbody id="row-body"></tbody>
+      </table>
+    </div>
+
+    <button id="btn-add-row" class="add-row-btn">+ Add row</button>
+
+    <!-- arithmetic check -->
+    <div class="check-panel">
+      <div class="check-title">Arithmetic Check</div>
+      <div class="check-grid">
+        <div class="check-stat"><div class="check-stat-label">Σ Back Sight</div><div class="check-stat-value mono" id="chk-bs">0.000</div></div>
+        <div class="check-stat"><div class="check-stat-label">Σ Fore Sight</div><div class="check-stat-value mono" id="chk-fs">0.000</div></div>
+        <div class="check-stat"><div class="check-stat-label">ΣBS − ΣFS</div><div class="check-stat-value mono" id="chk-a">0.000</div></div>
+        <div class="check-stat"><div class="check-stat-label">Σ Rise − Σ Fall</div><div class="check-stat-value mono" id="chk-b">0.000</div></div>
+        <div class="check-stat"><div class="check-stat-label">Last RL − First RL</div><div class="check-stat-value mono" id="chk-c">—</div></div>
+      </div>
+      <div id="check-badge" class="check-badge"></div>
+    </div>
+
+    <div class="footnote">Saved automatically on this device · works fully offline once loaded</div>
+
+  </div>
+</div>
+
+<!-- library modal -->
+<div id="modal-overlay" class="modal-overlay" hidden>
+  <div class="modal" role="dialog" aria-modal="true">
+    <div class="modal-header">
+      <span class="modal-title">Saved Field Books</span>
+      <button id="btn-close-modal" class="btn btn-ghost btn-icon-only">✕</button>
+    </div>
+    <div id="modal-body"></div>
+  </div>
+</div>
+
+<!-- auth screen -->
+<div id="auth-overlay" class="modal-overlay">
+  <div class="modal auth-modal">
+    <div class="modal-header">
+      <span class="modal-title" id="auth-title">Sign in</span>
+    </div>
+    <div class="auth-body">
+      <p class="auth-blurb" id="auth-blurb">Sign in to sync your field books across devices. You'll still be able to work fully offline after your first sign-in.</p>
+      <label class="meta-field">
+        <span class="meta-label">Email</span>
+        <input class="meta-input" type="email" id="auth-email" autocomplete="email" />
+      </label>
+      <label class="meta-field">
+        <span class="meta-label">Password</span>
+        <span class="pw-field">
+          <input class="meta-input" type="password" id="auth-password" autocomplete="current-password" />
+          <button type="button" class="pw-toggle" data-target="auth-password" aria-label="Show password">👁</button>
+        </span>
+      </label>
+      <label class="meta-field" id="auth-confirm-field" hidden>
+        <span class="meta-label">Confirm password</span>
+        <span class="pw-field">
+          <input class="meta-input" type="password" id="auth-confirm" autocomplete="new-password" />
+          <button type="button" class="pw-toggle" data-target="auth-confirm" aria-label="Show password">👁</button>
+        </span>
+      </label>
+      <div id="auth-error" class="auth-error" hidden></div>
+      <div id="auth-notice" class="auth-notice" hidden></div>
+      <div class="auth-actions">
+        <button id="btn-auth-submit" class="btn btn-primary auth-submit">Sign in</button>
+      </div>
+      <button id="btn-resend" class="link-btn auth-forgot" hidden>Resend verification email</button>
+      <div class="auth-switch">
+        <span id="auth-switch-text">Don't have an account?</span>
+        <button id="btn-auth-switch" class="link-btn">Create one</button>
+      </div>
+      <button id="btn-forgot" class="link-btn auth-forgot">Forgot password?</button>
+    </div>
+  </div>
+</div>
+
+
+<script type="module" src="app.js"></script>
+</body>
+</html>
