@@ -4,10 +4,10 @@
 // enforced by your Firestore security rules (see README.md), not by hiding this file.
 
 export const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_PROJECT_ID.appspot.com",
-  messagingSenderId: "YOUR_SENDER_ID",
-  appId: "YOUR_APP_ID",
+  apiKey: "AIzaSyCx5kFZq3uoF-6lExGGZtZDIceztuDZ3bc",
+  authDomain: "mtg7-caeea.firebaseapp.com",
+  projectId: "mtg7-caeea",
+  storageBucket: "mtg7-caeea.firebasestorage.app",
+  messagingSenderId: "714152940805",
+  appId: "1:714152940805:web:ec96a3e6967a2b881ed36c",
 };
